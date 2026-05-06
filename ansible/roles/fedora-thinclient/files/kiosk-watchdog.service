@@ -1,0 +1,13 @@
+[Unit]
+Description=Kiosk RDP Watchdog
+After=graphical.target
+Wants=graphical.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/kiosk-watchdog.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

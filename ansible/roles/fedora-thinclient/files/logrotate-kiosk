@@ -1,0 +1,8 @@
+/var/log/kiosk-rdp/*.log {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+    copytruncate
+}

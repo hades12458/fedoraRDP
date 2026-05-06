@@ -1,0 +1,34 @@
+# Configuration thin client RDP
+# Déployer dans /etc/kiosk-rdp/config
+
+# Serveur RDP cible
+RDP_SERVER="rds.domain.local"
+RDP_DOMAIN="DOMAIN"
+RDP_PORT="3389"
+
+# Mode SSO Kerberos (recommandé) : true | false
+USE_KERBEROS=true
+
+# Si USE_KERBEROS=false, prompt natif xfreerdp
+PROMPT_CREDENTIALS=true
+
+# Reconnexion
+RECONNECT_DELAY=3
+MAX_RECONNECT_ATTEMPTS=0   # 0 = infini
+
+# Profil réseau : auto | modem | broadband-low | broadband-high | wan | lan
+NETWORK_PROFILE="auto"
+
+# Multi-écrans : true | false
+MULTIMON=true
+
+# Audio : remote | local | off
+AUDIO_MODE="remote"
+
+# Synchro presse-papier
+CLIPBOARD=true
+
+# RD Gateway (optionnel)
+USE_GATEWAY=false
+GATEWAY_HOST=""
+GATEWAY_USAGE="detect"   # detect | direct

@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+# Configuration thin client RDP
+
+RDP_SERVER="{{ rdp_server | default('rds.domain.local') }}"
+RDP_DOMAIN="{{ rdp_domain | default('DOMAIN') }}"
+RDP_PORT="{{ rdp_port | default('3389') }}"
+
+USE_KERBEROS={{ use_kerberos | default(true) | lower }}
+PROMPT_CREDENTIALS={{ prompt_credentials | default(true) | lower }}
+
+RECONNECT_DELAY={{ reconnect_delay | default(3) }}
+MAX_RECONNECT_ATTEMPTS={{ max_reconnect_attempts | default(0) }}
+
+NETWORK_PROFILE="{{ network_profile | default('auto') }}"
+MULTIMON={{ multimon | default(true) | lower }}
+AUDIO_MODE="{{ audio_mode | default('remote') }}"
+CLIPBOARD={{ clipboard | default(true) | lower }}
+
+USE_GATEWAY={{ use_gateway | default(false) | lower }}
+GATEWAY_HOST="{{ gateway_host | default('') }}"
+GATEWAY_USAGE="{{ gateway_usage | default('detect') }}"

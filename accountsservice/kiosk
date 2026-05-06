@@ -1,0 +1,5 @@
+[User]
+Session=kiosk-rdp
+XSession=kiosk-rdp
+Icon=/usr/share/pixmaps/faces/computer.png
+SystemAccount=false

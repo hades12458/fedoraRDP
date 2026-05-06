@@ -1,0 +1,20 @@
+---
+# roles/fedora-thinclient/handlers/main.yml
+
+- name: daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: restart gdm
+  ansible.builtin.systemd:
+    name: gdm
+    state: restarted
+
+- name: restart watchdog
+  ansible.builtin.systemd:
+    name: kiosk-watchdog.service
+    state: restarted
+
+- name: dconf update
+  ansible.builtin.command: dconf update
+  changed_when: false

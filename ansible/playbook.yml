@@ -1,0 +1,24 @@
+---
+# playbook.yml - Exemple de playbook de déploiement
+#
+# Usage:
+#   ansible-playbook -i inventory.ini playbook.yml
+#
+# Variables overridables (group_vars ou inventaire) :
+#   rdp_server, rdp_domain, rdp_port, network_profile, multimon, etc.
+
+- name: Deploy Fedora thin client RDP
+  hosts: thinclients
+  become: true
+  vars:
+    rdp_server: "rds.domain.local"
+    rdp_domain: "DOMAIN"
+    rdp_port: "3389"
+    network_profile: "auto"
+    multimon: true
+    audio_mode: "remote"
+    clipboard: true
+    use_kerberos: true
+
+  roles:
+    - fedora-thinclient

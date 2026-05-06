@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Kiosk RDP
+Comment=Thin Client RDP Session
+Exec=/usr/local/bin/kiosk-session.sh
+Type=Application
+DesktopNames=KioskRDP

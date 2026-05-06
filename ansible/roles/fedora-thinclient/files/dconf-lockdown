@@ -1,0 +1,23 @@
+[org/gnome/desktop/lockdown]
+disable-log-out=true
+disable-user-switching=true
+disable-lock-screen=true
+disable-printing=true
+disable-print-setup=true
+disable-save-to-disk=true
+disable-application-handlers=true
+
+[org/gnome/desktop/screensaver]
+lock-enabled=false
+idle-activation-enabled=false
+
+[org/gnome/desktop/session]
+idle-delay=uint32 0
+
+[org/gnome/settings-daemon/plugins/power]
+sleep-inactive-ac-type='nothing'
+sleep-inactive-battery-type='nothing'
+idle-dim=false
+
+[org/gnome/desktop/notifications]
+show-banners=false

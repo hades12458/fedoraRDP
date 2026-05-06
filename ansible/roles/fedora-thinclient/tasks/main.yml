@@ -1,0 +1,144 @@
+---
+# roles/fedora-thinclient/tasks/main.yml
+
+- name: Install thin client packages
+  ansible.builtin.dnf:
+    name:
+      - freerdp
+      - gnome-session
+      - gnome-settings-daemon
+      - mutter
+      - gdm
+      - NetworkManager
+      - sssd-ad
+      - sssd-tools
+      - realmd
+      - adcli
+      - krb5-workstation
+      - oddjob-mkhomedir
+      - dconf-cli
+      - chrony
+      - xorg-x11-server-utils
+    state: present
+
+- name: Set graphical target
+  ansible.builtin.command: systemctl set-default graphical.target
+  changed_when: false
+
+- name: Ensure chronyd is running
+  ansible.builtin.systemd:
+    name: chronyd
+    enabled: true
+    state: started
+
+- name: Create kiosk user
+  ansible.builtin.user:
+    name: kiosk
+    comment: "Kiosk RDP User"
+    shell: /bin/bash
+    create_home: true
+    password_lock: true
+
+- name: Sudo deny for kiosk
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/99-kiosk-deny
+    content: "kiosk ALL=(ALL) !ALL\n"
+    mode: '0440'
+    validate: 'visudo -cf %s'
+
+- name: Deploy launcher scripts
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: '0755'
+  loop:
+    - { src: kiosk-session.sh,  dest: /usr/local/bin/kiosk-session.sh }
+    - { src: rdp-launcher.sh,   dest: /usr/local/bin/rdp-launcher.sh }
+    - { src: kiosk-watchdog.sh, dest: /usr/local/bin/kiosk-watchdog.sh }
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: /etc/kiosk-rdp
+    state: directory
+    mode: '0755'
+
+- name: Deploy RDP config
+  ansible.builtin.template:
+    src: config.j2
+    dest: /etc/kiosk-rdp/config
+    mode: '0644'
+
+- name: Create log dir
+  ansible.builtin.file:
+    path: /var/log/kiosk-rdp
+    state: directory
+    owner: kiosk
+    group: kiosk
+    mode: '0755'
+
+- name: Deploy GDM config
+  ansible.builtin.copy:
+    src: custom.conf
+    dest: /etc/gdm/custom.conf
+    mode: '0644'
+  notify: restart gdm
+
+- name: Deploy xsession
+  ansible.builtin.copy:
+    src: kiosk-rdp.desktop
+    dest: /usr/share/xsessions/kiosk-rdp.desktop
+    mode: '0644'
+
+- name: Deploy AccountsService user file
+  ansible.builtin.copy:
+    src: accountsservice-kiosk
+    dest: /var/lib/AccountsService/users/kiosk
+    mode: '0600'
+
+- name: Deploy dconf profile
+  ansible.builtin.copy:
+    src: dconf-profile-user
+    dest: /etc/dconf/profile/user
+    mode: '0644'
+  notify: dconf update
+
+- name: Deploy dconf lockdown
+  ansible.builtin.copy:
+    src: dconf-lockdown
+    dest: /etc/dconf/db/kiosk.d/00-lockdown
+    mode: '0644'
+  notify: dconf update
+
+- name: Deploy dconf locks
+  ansible.builtin.copy:
+    src: dconf-locks
+    dest: /etc/dconf/db/kiosk.d/locks/lockdown
+    mode: '0644'
+  notify: dconf update
+
+- name: Deploy watchdog service
+  ansible.builtin.copy:
+    src: kiosk-watchdog.service
+    dest: /etc/systemd/system/kiosk-watchdog.service
+    mode: '0644'
+  notify:
+    - daemon-reload
+    - restart watchdog
+
+- name: Enable watchdog
+  ansible.builtin.systemd:
+    name: kiosk-watchdog.service
+    enabled: true
+    state: started
+
+- name: Deploy logind config
+  ansible.builtin.copy:
+    src: logind-kiosk.conf
+    dest: /etc/systemd/logind.conf.d/kiosk.conf
+    mode: '0644'
+
+- name: Deploy logrotate config
+  ansible.builtin.copy:
+    src: logrotate-kiosk
+    dest: /etc/logrotate.d/kiosk-rdp
+    mode: '0644'
