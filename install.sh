@@ -31,14 +31,14 @@ dnf install -y \
     mutter \
     gdm \
     NetworkManager \
-    dconf-cli \
+    dconf \
     chrony \
-    xorg-x11-server-utils \
+    xrandr \
     xset \
     iputils 2>/dev/null || \
 dnf install -y --best --allowerasing \
     freerdp gnome-session gnome-settings-daemon mutter gdm \
-    NetworkManager dconf-cli chrony xorg-x11-server-utils xset iputils
+    NetworkManager dconf chrony xrandr xset iputils
 
 # Vérifier que xfreerdp3 est disponible (Fedora 39+ l'appelle xfreerdp3)
 if ! command -v xfreerdp3 &>/dev/null; then
