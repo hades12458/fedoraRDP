@@ -1,34 +1,43 @@
-# Configuration thin client RDP
-# Déployer dans /etc/kiosk-rdp/config
+# =============================================================
+# Configuration Thin Client Fedora → PC Windows 10/11
+# Fichier déployé dans : /etc/kiosk-rdp/config
+# =============================================================
 
-# Serveur RDP cible
-RDP_SERVER="rds.domain.local"
-RDP_DOMAIN="DOMAIN"
+# --- OBLIGATOIRE : à remplir avant le premier boot ---
+
+# IP ou nom du PC Windows cible (ex: 192.168.1.50)
+RDP_SERVER="192.168.1.XXX"
+
+# Compte Windows local sur le PC cible
+# (Paramètres Windows → Comptes → ton nom d'utilisateur)
+RDP_USER="Prenom"
+RDP_PASSWORD="ton_mot_de_passe_windows"
+
+# Domaine : laisser vide pour un compte local Windows (workgroup)
+RDP_DOMAIN=""
+
+# Port RDP (3389 par défaut, ne pas changer sauf config spéciale)
 RDP_PORT="3389"
 
-# Mode SSO Kerberos (recommandé) : true | false
-USE_KERBEROS=true
+# --- Options ---
 
-# Si USE_KERBEROS=false, prompt natif xfreerdp
-PROMPT_CREDENTIALS=true
+# Kerberos/AD : désactivé (pas d'AD)
+USE_KERBEROS=false
 
-# Reconnexion
-RECONNECT_DELAY=3
+# Reconnexion auto
+RECONNECT_DELAY=5          # secondes entre deux tentatives
 MAX_RECONNECT_ATTEMPTS=0   # 0 = infini
 
-# Profil réseau : auto | modem | broadband-low | broadband-high | wan | lan
-NETWORK_PROFILE="auto"
+# Multi-écrans (true uniquement si le PC Windows a plusieurs écrans)
+MULTIMON=false
 
-# Multi-écrans : true | false
-MULTIMON=true
-
-# Audio : remote | local | off
+# Audio depuis le PC Windows vers ce Fedora
+# remote = son joué ici | off = pas de son
 AUDIO_MODE="remote"
 
-# Synchro presse-papier
+# Copier/coller entre les deux machines
 CLIPBOARD=true
 
-# RD Gateway (optionnel)
+# RD Gateway : désactivé (connexion directe LAN)
 USE_GATEWAY=false
 GATEWAY_HOST=""
-GATEWAY_USAGE="detect"   # detect | direct
